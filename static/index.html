@@ -22,6 +22,32 @@
   --text-color: #000000;
 }
 
+:root.dark-theme {
+  --primary-bg: #222222;
+  --tab-bg: #202020;
+  --tab-active-bg: #202020;
+  --button-bg: #202020;
+  --tile-bg: #202020;
+  --text-color: #e0e0e0;
+}
+
+.dark-theme input,
+.dark-theme select,
+.dark-theme textarea {
+  background-color: var(--tile-bg);
+  color: var(--text-color);
+  border: 1px solid var(--button-border, #ffc000);
+}
+
+.dark-theme button,
+.dark-theme .button {
+  color: var(--text-color);
+}
+
+.dark-theme header a {
+  color: #303030 !important;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 body, h1, h2, h3, p, ul, li, header, nav, main, form { margin:0; padding:0; }
 body {
@@ -170,7 +196,7 @@ form button {
 <body>
 
 <header>
-    <h1>Miami Amber</h1>
+    <a href="https://amber.miami.monster" style="color: inherit; text-decoration: none;"><h1>Miami Amber</h1></a>
 </header>
 
 <nav>
@@ -241,7 +267,7 @@ form button {
             <button type="submit">Register</button>
         </form>
         <div id="logoutSection">
-            <p>You are logged in.</p>
+            <p id="loggedInText">You are logged in.</p>
             <button id="logoutBtn" class="button">Logout</button>
         </div>
     </div>
@@ -265,6 +291,12 @@ form button {
             <option value="250">Small (250px)</option>
             <option value="500" selected>Medium (500px)</option>
             <option value="1200">Large (1200px)</option>
+        </select>
+
+        <label style="display:block; margin-top:12px;">Theme</label>
+        <select id="themeSetting">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
         </select>
     </div>
 </main>

@@ -110,7 +110,7 @@ function renderPostTile(post, options = {}) {
     const album = post.album || 'Unknown album';
     const text = post.text || '';
     const rating = post.rating != null ? post.rating : 'N/A';
-    const date = post.date ? new Date(post.date).toLocaleDateString() : 'Unknown date';
+    const date = post.date ? new Date(post.date).toISOString().split('T')[0] : 'Unknown date';
     const userName = userNameOverride || post.user?.name || 'Unknown';
     const mbid = post.musicbrainz_id;
     const tags = post.tags || [];
@@ -124,6 +124,14 @@ function renderPostTile(post, options = {}) {
     const img = document.createElement('img');
     img.className = 'cover-art';
     img.style.display = 'none';
+
+    let currentScale = 0;
+    img.addEventListener('click', () => {
+        currentScale += 0.2;
+        img.style.transform = `scale(${currentScale < 1 ? 1 : currentScale})`;
+        img.style.position = "relative";
+        img.style.zIndex = "0";
+    });
 
     if (mbid) {
         loadCoverArt(mbid, img);
@@ -415,6 +423,8 @@ function updateLoginUI() {
         loginForm.style.display = "none";
         registerForm.style.display = "none";
         followingBtn.style.display = "inline-block";
+        const user = getCurrentUser();
+        document.getElementById("loggedInText").textContent = `You are logged in. The user name of the account you are currently logged in as is \'${user ? user.name : 'Unknown'}\'. You are logged in.`;
     } else {
         logoutSection.style.display = "none";
         loginForm.style.display = "block";
@@ -436,3 +446,19 @@ imageQualityEl.addEventListener('change', () => {
     loadPosts(currentFilter);
 });
 
+const themeSettingEl = document.getElementById('themeSetting');
+const savedTheme = localStorage.getItem('theme') || 'light';
+themeSettingEl.value = savedTheme;
+
+if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark-theme');
+}
+
+themeSettingEl.addEventListener('change', () => {
+    localStorage.setItem('theme', themeSettingEl.value);
+    if (themeSettingEl.value === 'dark') {
+        document.documentElement.classList.add('dark-theme');
+    } else {
+        document.documentElement.classList.remove('dark-theme');
+    }
+});
