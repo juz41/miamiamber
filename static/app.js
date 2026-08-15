@@ -214,18 +214,25 @@ document.getElementById('searchForm').addEventListener('submit', e => {
     loadPosts({type: 'search', q});
 });
 
+function decodeHTMLEntities(str) {
+    if (str == null) return '';
+    const txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+}
+
 async function enterEditMode(id) {
     try {
         const res = await fetch(`${base_url}/posts/${id}`, { headers: authHeaders(false) });
         if (!res.ok) { alert('Could not load post'); return; }
         const post = await res.json();
         const form = document.getElementById('createForm');
-        form.title.value = post.title || '';
-        form.artist.value = post.artist || '';
-        form.album.value = post.album || '';
+	form.title.value = decodeHTMLEntities(post.title || '');
+        form.artist.value = decodeHTMLEntities(post.artist || '');
+        form.album.value = decodeHTMLEntities(post.album || '');
         form.mbid.value = post.musicbrainz_id || '';
-        form.text.value = post.text || '';
-        form.tags.value = (post.tags || []).join(', ');
+	form.text.value = decodeHTMLEntities(post.text || '');
+	form.tags.value = (post.tags || []).map(decodeHTMLEntities).join(', ');
         form.rating.value = post.rating ?? 0;
         form.dataset.editId = id;
         document.getElementById('createSubmitBtn').textContent = 'Update Post';
